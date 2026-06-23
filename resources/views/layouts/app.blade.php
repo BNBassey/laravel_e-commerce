@@ -8,6 +8,7 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
            
         <link href="{{asset('favicon.ico')}}" rel="shortcut icon" type="image/x-icon" />
+        
         <script src="https://cdn.tailwindcss.com"></script>
 
         <script>
@@ -101,7 +102,7 @@
                             @else
                                 <li><a href="{{ Auth::user()->utype=="ADM" ? route("admin.index"): route("users.index") }}" class="block px-4 py-2 hover:bg-gray-100 text-sm">My Account</a></li>
                                 <li>
-                                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit()" class="block px-4 py-2 hover:bg-gray-100 text-sm">Sign Out</a>
+                                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="block px-4 py-2 hover:bg-gray-100 text-sm">Sign Out</a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                                         @csrf
                                     </form>
