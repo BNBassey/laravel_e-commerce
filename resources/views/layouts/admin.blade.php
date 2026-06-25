@@ -44,7 +44,7 @@
             
             <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-sky-800 text-gray-100 transition-transform transform -translate-x-full md:translate-x-0 md:static md:inset-0 flex flex-col">
                 <div class="flex items-center justify-center h-16 bg-sky-700 border-b border-gray-800">
-                    <a href="{{ route('admin.index') }}"><img src="assets/images/logo.png" alt="Logo" class="h-12" /></a>
+                    <a href="{{ route('admin.index') }}"><img src="{{ asset('assets/images/logo.png') }}" alt="Logo" class="h-12" /></a>
                 </div>
 
                 <div class="flex-1 overflow-y-auto py-4">
@@ -66,7 +66,7 @@
                             <span class="font-medium">Categories</span>
                         </a>
 
-                        <a href="brands.php" class="nav-link flex items-center gap-3 px-4 py-2.5 text-gray-100 hover:text-white hover:bg-gray-800 rounded-lg transition">
+                        <a href="{{ route('admin.brands') }}" class="nav-link flex items-center gap-3 px-4 py-2.5 text-gray-100 hover:text-white hover:bg-gray-800 rounded-lg transition">
                             <i class="fa-solid fa-tag w-5 text-center"></i>
                             <span>Brands</span>
                         </a>

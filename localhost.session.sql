@@ -1,0 +1,1 @@
+-- Active: 1780701981655@@localhost@3306@laravel_e-commerce
