@@ -4,22 +4,22 @@
 
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">Brands</h1>
-                <p class="text-sm text-gray-500">Manage product brands and partners</p>
+                <h1 class="text-2xl font-bold text-gray-800">Categories</h1>
+                <p class="text-sm text-gray-500">Manage product categories and partners</p>
             </div>
-            <a href="{{ route('admin.brand.add') }}" class="bg-primary hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition flex items-center gap-2 shadow-sm">
-                <i class="fa-solid fa-plus"></i> Add New Brand
+            <a href="{{ route('admin.category.add') }}" class="bg-primary hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-plus"></i> Add New Category
             </a>
         </div>
 
         <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
-            <form action="{{ route('admin.brands') }}" method="GET" class="flex flex-col md:flex-row gap-4 justify-between">
+            <form action="{{ route('admin.categories') }}" method="GET" class="flex flex-col md:flex-row gap-4 justify-between">
                 <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
                     <div class="relative w-full md:w-64">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                             <i class="fa-solid fa-search text-gray-400"></i>
                         </span>
-                        <input type="text" name="search" value="{{ request('search') }}" class="w-full pl-10 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Search brand...">
+                        <input type="text" name="search" value="{{ request('search') }}" class="w-full pl-10 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Search category...">
                     </div>
 
                     <select name="status" onchange="this.form.submit()" class="w-full md:w-40 border px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-primary bg-white text-gray-600">
@@ -28,7 +28,7 @@
                         <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Inactive</option>
                     </select>
                     @if (request('search') || request()->filled('status'))
-                        <a href="{{ route('admin.brands') }}" class="text-sm text-gray-600 hover:text-gray-900 transition flex items-center gap-2 shadow-sm">
+                        <a href="{{ route('admin.categories') }}" class="text-sm text-gray-600 hover:text-gray-900 transition flex items-center gap-2 shadow-sm">
                             <i class="fa-solid fa-xmark"></i> Clear
                         </a>
                     @endif
@@ -49,31 +49,39 @@
                         <tr>
                             <th class="px-6 py-4">ID</th>
                             <th class="px-6 py-4">Logo</th>
-                            <th class="px-6 py-4">Brand Name</th>
+                            <th class="px-6 py-4">Category Name</th>
                             <th class="px-6 py-4">Slug</th>
+                            <th class="px-6 py-4">Parent</th>
                             <th class="px-6 py-4">Products</th>
                             <th class="px-6 py-4">Status</th>
                             <th class="px-6 py-4 text-right">Action</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        @forelse ($brands as $brand)
+                        @forelse ($categories as $category)
                             <tr class="hover:bg-gray-50 transition">
-                                <td class="px-6 py-4 text-sm text-gray-500">{{ $brand->id }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">{{ $category->id }}</td>
                                 <td class="px-6 py-4">
                                     <div class="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center border">
-                                        <img src="{{asset('uploads/brands/thumbnails')}}/{{$brand->image}}" class="max-w-[30px] max-h-[30px] object-contain" alt="{{ $brand->name }}" onerror="this.src='https://placehold.co/40x40?text=B'">
+                                        <img src="{{asset('uploads/categories/thumbnails')}}/{{$category->image}}" class="max-w-[30px] max-h-[30px] object-contain" alt="{{ $category->name }}" onerror="this.src='https://placehold.co/40x40?text=B'">
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span class="font-semibold text-gray-800">{{ $brand->name }}</span>
+                                    <span class="font-semibold text-gray-800">{{ $category->name }}</span>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">{{ $brand->slug }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">{{ $category->slug }}</td>
                                 <td class="px-6 py-4">
-                                    <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-semibold">0</span>
+                                    @if ($category->parent)
+                                        <span class="bg-gray-100 text-gray-700" px-2.5 py-1 rounded-full text-xs font-semibold>{{ $category->parent->name }}</span>
+                                    @else
+                                        <span class="bg-yellow-100 text-yellow-700" px-2.5 py-1 rounded-full text-xs font-semibold>-</span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4">
-                                    @if ($brand->status)
+                                    <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-semibold">{{ $category->products_count ?? 0 }}</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if ($category->status)
                                         <span class="bg-green-100 text-green-700 px-2.5 py-1 rounded-full text-xs font-semibold">Active</span>
                                     @else
                                         <span class="bg-red-100 text-red-700 px-2.5 py-1 rounded-full text-xs font-semibold">Inactive</span>
@@ -81,13 +89,13 @@
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
-                                        <a href="{{ route('admin.brand.edit',['id'=>$brand->id]) }}" class="w-8 h-8 rounded-full hover:bg-gray-100 text-blue-500 transition flex items-center justify-center" title="Edit">
+                                        <a href="{{ route('admin.category.edit',['id'=>$category->id]) }}" class="w-8 h-8 rounded-full hover:bg-gray-100 text-blue-500 transition flex items-center justify-center" title="Edit">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </a>
-                                        <form id="delete-form-{{ $brand->id }}" method="POST" action="{{ route('admin.brand.delete', ['id'=>$brand->id]) }}">
+                                        <form id="delete-form-{{ $category->id }}" method="POST" action="{{ route('admin.category.delete', ['id'=>$category->id]) }}">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="w-8 h-8 rounded-full hover:bg-gray-100 text-red-500 transition flex items-center justify-center" onclick="deleteBrand(this, '{{ $brand->name }}', {{ $brand->id }})" title="Delete">
+                                            <button type="button" class="w-8 h-8 rounded-full hover:bg-gray-100 text-red-500 transition flex items-center justify-center" onclick="deleteCategory(this, '{{ $category->name }}', {{ $category->id }})" title="Delete">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </form>
@@ -99,22 +107,22 @@
                                 <td colspan="7" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center text-gray-500">
                                         <i class="fa-solid fa-boxes-stacked text-4xl mb-3 text-gray-300"></i>
-                                        <h3 class="text-lg font-medium text-gray-900">Brands not available</h3>
-                                        <p class="text-sm mt-1">You haven't added any brands to your store yet.</p>
-                                        <a href="{{ route('admin.brand.add') }}" class="mt-4 text-primary hover:underline text-sm font-medium">
-                                            Add your first brand
+                                        <h3 class="text-lg font-medium text-gray-900">Categories not available</h3>
+                                        <p class="text-sm mt-1">You haven't added any categories to your store yet.</p>
+                                        <a href="{{ route('admin.category.add') }}" class="mt-4 text-primary hover:underline text-sm font-medium">
+                                            Add your first category
                                         </a>
                                     </div>
                                 </td>
                             </tr>
                         @endforelse
-                                                
+                    
                     </tbody>
                 </table>
             </div>
 
             <div class="px-6 py-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                {{ $brands->links() }}
+                {{ $categories->links() }}
             </div>
         </div>
 
@@ -132,9 +140,9 @@
                                 <i class="fa-solid fa-triangle-exclamation text-red-600"></i>
                             </div>
                             <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                                <h3 class="text-lg font-semibold leading-6 text-gray-900" id="modal-title">Delete Brand</h3>
+                                <h3 class="text-lg font-semibold leading-6 text-gray-900" id="modal-title">Delete Category</h3>
                                 <div class="mt-2">
-                                    <p class="text-sm text-gray-500">Are you sure you want to delete <strong id="delete-brand-name" class="text-gray-800">this brand</strong>? All of its data will be permanently removed. This action cannot be undone.</p>
+                                    <p class="text-sm text-gray-500">Are you sure you want to delete <strong id="delete-category-name" class="text-gray-800">this category</strong>? All of its data will be permanently removed. This action cannot be undone.</p>
                                 </div>
                             </div>
                         </div>
@@ -153,20 +161,20 @@
         const deleteModal = document.getElementById('deleteModal');
         const confirmBtn = document.getElementById('confirmDeleteBtn');
         const cancelBtn = document.getElementById('cancelDeleteBtn');
-        const brandNameSpan = document.getElementById('delete-brand-name');
+        const categoryNameSpan = document.getElementById('delete-category-name');
 
         // Variables to hold the state of what we are deleting
         let rowToDelete = null;
-        let brandIdToDelete = null;
+        let categoryIdToDelete = null;
 
         // Function triggered when the trash icon is clicked
-        function deleteBrand(buttonElement, brandName, brandId) {
+        function deleteCategory(buttonElement, categoryName, categoryId) {
             // Save the row so we can remove it later
             rowToDelete = buttonElement.closest('tr');
-            brandIdToDelete = brandId;
+            categoryIdToDelete = categoryId;
 
             // Update the modal text dynamically
-            brandNameSpan.textContent = brandName || "this brand";
+            categoryNameSpan.textContent = categoryName || "this category";
 
             // Show the modal by removing the 'hidden' class
             deleteModal.classList.remove('hidden');
@@ -176,7 +184,7 @@
         function closeModal() {
             deleteModal.classList.add('hidden');
             rowToDelete = null;
-            brandIdToDelete = null;
+            categoryIdToDelete = null;
         }
 
         // Handle Cancel Button
@@ -192,13 +200,13 @@
 
         // Handle Confirm Delete Button
         confirmBtn.addEventListener('click', function() {
-            if(brandIdToDelete) {
-                const form = document.getElementById(`delete-form-${brandIdToDelete}`);
+            if(categoryIdToDelete) {
+                const form = document.getElementById(`delete-form-${categoryIdToDelete}`);
                 if(form) {
                     form.submit();
                 }
             }
         });
     </script>
-
+    
 </x-admin-layout>
