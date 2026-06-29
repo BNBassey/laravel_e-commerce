@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthAdmin;
 use Illuminate\Support\Facades\Route;
@@ -12,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+Route::get('/shop/{slug}', [ShopController::class, 'productDetails'])->name('shop.product.details');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -39,14 +43,22 @@ Route::middleware([AuthAdmin::class])->group(function () {
     Route::get('/admin/category-edit/{id}', [AdminController::class, 'categoryEdit'])->name('admin.category.edit');
     Route::put('/admin/category-update/{id}', [AdminController::class, 'categoryUpdate'])->name('admin.category.update');
     Route::delete('/admin/category-delete/{id}', [AdminController::class, 'categoryDelete'])->name('admin.category.delete');
-    
-    Route::get('/admin/products', [AdminController::class, 'products'])->name('admin.products');
-    Route::get('/admin/product-add', [AdminController::class, 'productAdd'])->name('admin.product.add');
-    Route::post('/admin/product-store', [AdminController::class, 'productStore'])->name('admin.product.store');
-    Route::get('/admin/product-edit/{id}', [AdminController::class, 'productEdit'])->name('admin.product.edit');
-    Route::put('/admin/product-update/{id}', [AdminController::class, 'productUpdate'])->name('admin.product.update');
-    Route::delete('/admin/product-delete/{id}', [AdminController::class, 'productDelete'])->name('admin.product.delete');
-    Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');
+
+    Route::get('/admin/products', [ProductController::class, 'products'])->name('admin.products');
+    Route::get('/admin/product-add', [ProductController::class, 'productAdd'])->name('admin.product.add');
+    Route::post('/admin/product-store', [ProductController::class, 'productStore'])->name('admin.product.store');
+    Route::get('/admin/product-edit/{id}', [ProductController::class, 'productEdit'])->name('admin.product.edit');
+    Route::put('/admin/product-update/{id}', [ProductController::class, 'productUpdate'])->name('admin.product.update');
+    Route::delete('/admin/product-delete/{id}', [ProductController::class, 'productDelete'])->name('admin.product.delete');
+    Route::delete('/admin/products-bulk-delete', [ProductController::class, 'productsBulkDelete'])->name('admin.products.bulk.delete');
+    Route::get('/admin/product-export', [ProductController::class, 'productExport'])->name('admin.product.export');    
+
+    Route::get('/admin/orders', [OrderController::class, 'orders'])->name('admin.orders');    
+    Route::get('/admin/order-add', [OrderController::class, 'orderAdd'])->name('admin.order.add');
+    Route::post('/admin/order-store', [OrderController::class, 'orderStore'])->name('admin.order.store');
+    Route::get('/admin/order-edit/{id}', [OrderController::class, 'orderEdit'])->name('admin.order.edit');
+    Route::put('/admin/order-update/{id}', [OrderController::class, 'orderUpdate'])->name('admin.order.update');
+    Route::delete('/admin/order-delete/{id}', [OrderController::class, 'orderDelete'])->name('admin.order.delete');
 });
 
 require __DIR__.'/auth.php';

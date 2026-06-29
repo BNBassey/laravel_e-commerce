@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Product;
 use Intervention\Image\Laravel\Facades\Image;
 
 class AdminController extends Controller
@@ -243,6 +244,20 @@ class AdminController extends Controller
         
     }
 
-    
+    public function products()
+    {
+        $query = Product::query();
+
+        if ($search = request('search')) {
+            $query->where('name', 'LIKE', "%{$search}%");
+        }
+
+        if (request()->filled('status')) {
+            $query->where('status', request('status'));
+        }
+
+        $products = $query->orderBy('id', 'DESC')->paginate(10)->withQueryString();
+        return view('admin.products', compact('products'));
+    }
     
 }

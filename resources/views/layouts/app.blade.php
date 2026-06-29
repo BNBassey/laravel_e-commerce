@@ -55,8 +55,8 @@
                     <div class="w-1/2 flex justify-center">
                         <nav>
                             <ul class="flex space-x-8 font-medium text-gray-700">
-                                <li><a href="index.php" class="hover:text-primary transition">Home</a></li>
-                                <li><a href="shop.php" class="hover:text-primary transition">Shop</a></li>
+                                <li><a href="{{ route('home.index') }}" class="hover:text-primary transition">Home</a></li>
+                                <li><a href="{{ route('shop.index') }}" class="hover:text-primary transition">Shop</a></li>
                                 <li><a href="cart.php" class="hover:text-primary transition">Cart</a></li>
                                 <li><a href="wishlist.php" class="hover:text-primary transition">Wishlist</a></li>
                                 <li><a href="contact.php" class="hover:text-primary transition">Contact</a></li>
@@ -407,23 +407,5 @@
         </script>
 
     </body>
-    {{-- <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
-
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
-
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-    </body> --}}
+    
 </html>
