@@ -41,7 +41,7 @@
                             @endif
                         </div>
                     </div>
-                    </div>
+                    
                 </div>
     
                 <div class="w-full lg:w-1/2">
@@ -100,19 +100,40 @@
                     </p>
     
                     <div class="flex flex-wrap items-center gap-4 mb-8">
-                        <div class="flex border rounded">
-                            <button class="qty-btn px-3 py-2 hover:bg-gray-100" onclick="updateQty(-1)">-</button>
-                            <input type="number" id="qty-input" value="1" class="w-12 text-center focus:outline-none" readonly>
-                            <button class="qty-btn px-3 py-2 hover:bg-gray-100" onclick="updateQty(1)">+</button>
-                        </div>
-    
-                        <button class="bg-sky-700 text-white px-8 py-3 rounded hover:bg-primary transition font-medium">Add To Cart</button>
-                        
-                        <div class="flex space-x-2">
-                            <a href="#" class="w-10 h-10 flex items-center justify-center border rounded hover:bg-primary hover:text-white transition"><i class="fa-regular fa-heart text-xl"></i></a>
-                            <a href="#" class="w-10 h-10 flex items-center justify-center border rounded hover:bg-primary hover:text-white transition"><i class="fa-solid fa-shuffle text-xl"></i></a>
-                        </div>
+                        <form action="{{ route('cart.add') }}" method="POST" class="flex space-x-2">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <input type="hidden" name="price" value="{{ $product->sale_price ? $product->sale_price : $product->regular_price }}">
+                            <input type="hidden" name="name" value="{{ $product->name }}">
+                            
+                            <div class="flex border rounded">
+                                <button type="button" class="qty-btn px-3 py-2 hover:bg-gray-100" onclick="updateQty(-1)">-</button>
+                                <input type="number" id="qty-input" name="quantity" value="1" class="w-12 text-center focus:outline-none" readonly>
+                                <button type="button" class="qty-btn px-3 py-2 hover:bg-gray-100" onclick="updateQty(1)">+</button>
+                            </div>
+        
+                            <button type="submit" class="bg-sky-700 text-white px-8 py-3 rounded hover:bg-primary transition font-medium">Add To Cart</button>
+                        </form>   
+                        @php
+                            $isInWishlist = Cart::instance('wishlist')->content()->contains('id', $product->id);
+                        @endphp
+                        <form action="{{ route('wishlist.add') }}" method="POST" class="flex space-x-2">
+                            @csrf                                    
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <input type="hidden" name="name" value="{{ $product->name }}">
+                            <input type="hidden" name="quantity" value="1">
+                            <input type="hidden" name="price" value="{{ $product->sale_price ?? $product->regular_price }}">
+                            <button class="w-10 h-10 bg-white rounded-full shadow hover:bg-primary hover:text-white flex items-center justify-center transition">
+                                @if ($isInWishlist)
+                                    <i class="fa-solid fa-heart text-red-500"></i>
+                                @else
+                                    <i class="fa-regular fa-heart"></i>
+                                @endif
+                            </button>
+                        </form>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center border rounded hover:bg-primary hover:text-white transition"><i class="fa-solid fa-shuffle text-xl"></i></a>
                     </div>
+                    
     
                     <div class="space-y-2 text-sm text-gray-600 border-t pt-6">
                         <p><span class="font-bold text-gray-800 w-24 inline-block">SKU:</span> {{ $product->SKU }}</p>

@@ -203,13 +203,37 @@
                                     <img src="{{ asset('uploads/products/thumbnails')}}/{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-[300px] object-cover transition duration-500 group-hover:scale-105" />
                                 </a>
                                 <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    @php
+                                        $isInWishlist = Cart::instance('wishlist')->content()->contains('id', $product->id);
+                                    @endphp
+                                    <form action="{{ route('wishlist.add') }}" method="POST">
+                                        @csrf                                    
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <input type="hidden" name="name" value="{{ $product->name }}">
+                                        <input type="hidden" name="quantity" value="1">
+                                        <input type="hidden" name="price" value="{{ $product->sale_price ?? $product->regular_price }}">
+                                        <button class="w-10 h-10 bg-white rounded-full shadow hover:bg-primary hover:text-white flex items-center justify-center transition">
+                                            @if ($isInWishlist)
+                                                <i class="fa-solid fa-heart text-red-500"></i>
+                                            @else
+                                                <i class="fa-regular fa-heart"></i>
+                                            @endif
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('cart.add') }}" method="POST" class="flex space-x-2">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <input type="hidden" name="price" value="{{ $product->sale_price ? $product->sale_price : $product->regular_price }}">
+                                        <input type="hidden" name="name" value="{{ $product->name }}">
+                                        <input type="hidden" id="qty-input" name="quantity" value="1" class="w-12 text-center focus:outline-none" readonly>
+                                            
+                    
+                                        <button type="submit" class="w-10 h-10 bg-white rounded-full shadow hover:bg-primary hover:text-white flex items-center justify-center transition">
+                                            <i class="fa-solid fa-bag-shopping"></i>
+                                        </button>                                                         
+                                    </form>
+                                    
                                     <button class="w-10 h-10 bg-white rounded-full shadow hover:bg-primary hover:text-white flex items-center justify-center transition">
-                                        <i class="fa-regular fa-heart"></i>
-                                    </button>
-                                    <button class="w-10 h-10 bg-white rounded-full shadow hover:bg-primary hover:text-white flex items-center justify-center transition">
-                                        <i class="fa-solid fa-bag-shopping"></i>
-                                    </button>
-                                    <button class="w-10 h-10 bg-white rounde d-full shadow hover:bg-primary hover:text-white flex items-center justify-center transition">
                                         <i class="fa-solid fa-magnifying-glass"></i>
                                     </button>
                                 </div>
